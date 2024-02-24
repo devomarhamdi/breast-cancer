@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 import pickle
-import pandas as pd
+import numpy as np
 
 app = Flask(__name__)
 
@@ -13,22 +13,17 @@ def predict():
     try:
         # Receive data from POST request
         data = request.json
-        if data:
-            # Parse JSON data into a Python dictionary
-            data_dict = json.loads(data)
+        
+        # Convert JSON data into a reshaped NumPy array
+        data_array = np.array(list(data.values())).reshape(1, -1)
 
-            # Extract values and convert to NumPy array
-            data_array = np.array(list(data_dict.values()))
-
-            # Reshape the array to have one row and an undetermined number of columns
-            data_array_reshaped = data_array.reshape(1, -1)
-
-            prediction_list = model.predict(data_array_reshaped)
-
-            # Return prediction as JSON response
-            return jsonify({"prediction": prediction_list})
-        else:
-            return jsonify({"error": "No data provided"}), 400
+        # Make predictions using the loaded model
+        prediction = model.predict(data_array)
+        
+        # Assuming your model returns a single prediction, convert it to a list
+        prediction = prediction.tolist()
+        
+        return jsonify({"prediction": prediction})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
