@@ -13,15 +13,17 @@ def predict():
     try:
         # Receive data from POST request
         data = request.json
-        jsonData = pd.DataFrame(data)
-        # Check if data is provided
         if data:
-            # Make predictions using the loaded model
-            prediction = model.predict(jsonData)
-            prediction_series = pd.Series(prediction, index=[0])  # Assuming the prediction is for the first row
+            # Parse JSON data into a Python dictionary
+            data_dict = json.loads(data)
 
-            # Convert prediction to list (optional)
-            prediction_list = prediction_series.tolist()
+            # Extract values and convert to NumPy array
+            data_array = np.array(list(data_dict.values()))
+
+            # Reshape the array to have one row and an undetermined number of columns
+            data_array_reshaped = data_array.reshape(1, -1)
+
+            prediction_list = model.predict(data_array_reshaped)
 
             # Return prediction as JSON response
             return jsonify({"prediction": prediction_list})
