@@ -18,11 +18,13 @@ def predict():
         if data:
             # Make predictions using the loaded model
             prediction = model.predict(jsonData)
-            
-            # Assuming your model returns a single prediction, convert it to a list
-            # prediction = prediction.tolist()
-            
-            return jsonify({"prediction": prediction})
+            prediction_series = pd.Series(prediction, index=[0])  # Assuming the prediction is for the first row
+
+            # Convert prediction to list (optional)
+            prediction_list = prediction_series.tolist()
+
+            # Return prediction as JSON response
+            return jsonify({"prediction": prediction_list})
         else:
             return jsonify({"error": "No data provided"}), 400
     except Exception as e:
