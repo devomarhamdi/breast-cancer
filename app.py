@@ -21,9 +21,12 @@ def predict():
         prediction = model.predict(data_array)
         
         # Assuming your model returns a single prediction, convert it to a list
-        # prediction = prediction.tolist()
-        
-        return jsonify({"prediction": prediction})
+        prediction = prediction.tolist()
+        if (prediction[0] == 0):
+            return jsonify({"prediction": 'The Breast cancer is Malignant'})
+        else:
+            return jsonify({"prediction": 'The Breast Cancer is Benign'})
+
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
