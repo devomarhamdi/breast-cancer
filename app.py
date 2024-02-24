@@ -21,7 +21,7 @@ def predict():
         prediction = model.predict(data_array)
         
         # Assuming your model returns a single prediction, convert it to a list
-        prediction = prediction.tolist()
+        # prediction = prediction.tolist()
         
         return jsonify({"prediction": prediction})
     except Exception as e:
