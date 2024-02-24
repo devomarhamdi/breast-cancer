@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 import pickle
+import pandas as pd
 
 app = Flask(__name__)
 
@@ -12,14 +13,14 @@ def predict():
     try:
         # Receive data from POST request
         data = request.json
-        
+        jsonData = pd.DataFrame(data)
         # Check if data is provided
         if data:
             # Make predictions using the loaded model
-            prediction = model.predict(data)
+            prediction = model.predict(jsonData)
             
             # Assuming your model returns a single prediction, convert it to a list
-            prediction = prediction.tolist()
+            # prediction = prediction.tolist()
             
             return jsonify({"prediction": prediction})
         else:
